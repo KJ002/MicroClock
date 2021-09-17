@@ -1,0 +1,12 @@
+{
+  "name": "microclock",
+  "version": "0.0.1",
+  "bin": "./source",
+  "private": true,
+  "description": "A graphical analogue clock to be displayed on a microbit 5x5 display",
+  "author": "James Butcher",
+  "license": "MIT",
+  "dependencies": {
+    "microbit": "lancaster-university/microbit"
+  }
+}
