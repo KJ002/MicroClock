@@ -70,18 +70,18 @@ struct Vec2{
 MicroBit uBit;
 
 int Vec2Position(Vec2 position, Vec2 matrix){
-	int result;
+	int result = 0;
 
-	result += (_round(position.y) - 1) * _round(matrix.x);
-	result += _round(position.x);
+	result += (round(position.y) - 1) * round(matrix.x);
+	result += round(position.x);
 	return result;
 }
 
-MicroBitImage Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
+MicroBitImage Vec2uBitImage(Vec2 start, Vec2 end){
 	float gradient = (end.y - start.y) / (end.x - start.x);
 	bool negativeGradient = (gradient < 0) ? true : false;
 
-	uint8_t matrix[MAP_X*MAP_Y];
+	uint8_t matrix[MAP_X*MAP_Y] = {};
 
 	for (int i = 0; i < MAP_X*MAP_Y; i++)
 		matrix[i] = 0;
@@ -93,8 +93,7 @@ MicroBitImage Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
 		x = (negativeGradient) ? -i : i;
 		y = i * gradient;
 
-		matrix[Vec2Position((Vec2){(float)x, (float)y}, (Vec2){MAP_X, MAP_Y})] = 1;
-		uBit.serial.send("Add led pos");
+		matrix[Vec2Position((Vec2){(float)x, (float)y}, (Vec2){MAP_X, MAP_Y}) % 25] = 1;
 	}
 
 	return MicroBitImage(MAP_X, MAP_Y, matrix);
@@ -103,12 +102,11 @@ MicroBitImage Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
 int main()
 {
 	uBit.init();
-
-	 //const uint8_t heart[] = { 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0}; // a cute heart
-	 //MicroBitImage i(5,5,heart);
-
+	const uint8_t heart[] = { 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0}; // a cute heart
+	MicroBitImage i(5,5,heart);
 	while (true){
 		uBit.display.print(Vec2uBitImage((Vec2){3, 3}, (Vec2){1, 3}));
+		//uBit.display.print(i);
 		uBit.sleep(500);
 	}
 
