@@ -78,14 +78,14 @@ int Vec2Position(Vec2 position, Vec2 matrix){
 	return result;
 }
 
-MicroBitImage Vec2uBitImage(Vec2 start, Vec2 end){
+uint8_t * Vec2uBitImage(Vec2 start, Vec2 end){
 
-	Vec2 delta = {(end.x - start.x)+1, (start.y - end.y)+1};
+	Vec2 delta = {(end.x - start.x)+1, (start.y - end.y < 0) ? (start.y - end.y)-1 : (start.y - end.y)+1};
 	float length = std::sqrt(power2(delta.x)+power2(delta.y));
 	Vec2 gradient = delta/(Vec2){length, length};
 	gradient = {(float)round(gradient.x), (float)round(gradient.y)};
 
-	uint8_t matrix[MAP_X*MAP_Y] = {};
+	static uint8_t matrix[MAP_X*MAP_Y] = {};
 
 	for (int i = 0; i < MAP_X*MAP_Y; i++)
 		matrix[i] = 0;
@@ -102,15 +102,23 @@ MicroBitImage Vec2uBitImage(Vec2 start, Vec2 end){
 		matrix[Vec2Position((Vec2){(float)x, (float)y}, (Vec2){MAP_X, MAP_Y})] = 1;
 	}
 
-	MicroBitImage result(MAP_X, MAP_Y, matrix);
-	return result;
+	return matrix;
 }
 
 int main()
 {
 	uBit.init();
+
+	uint8_t x[25] = {};
+
+	const uint8_t * data = Vec2uBitImage((Vec2){3, 3}, (Vec2){4, 5});
+
+	for (int i = 0; i < 25; i++)
+		x[i] = *(data + i);
+
+	MicroBitImage k(5, 5, x);
 	while (true){
-		uBit.display.print(Vec2uBitImage((Vec2){3, 3}, (Vec2){3, 5}));
+		uBit.display.print(k);
 		uBit.sleep(500);
 	}
 
