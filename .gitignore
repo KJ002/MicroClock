@@ -1,2 +1,4 @@
 build/
 .ccls-cache/
+yotta_modules/
+yotta_targets/
