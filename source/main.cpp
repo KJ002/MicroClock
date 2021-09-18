@@ -79,43 +79,28 @@ int Vec2Position(Vec2 position, Vec2 matrix){
 }
 
 MicroBitImage Vec2uBitImage(Vec2 start, Vec2 end){
-	//float gradient = (end.y - start.y) / (end.x - start.x);
-	//float gradient = 1.f;
-	//bool negativeGradient = (gradient < 0.f) ? true : false;
 
-	Vec2 delta{end.x-start.x, end.y-start.y};
+	Vec2 delta = {(end.x - start.x)+1, (start.y - end.y)+1};
 	float length = std::sqrt(power2(delta.x)+power2(delta.y));
 	Vec2 gradient = delta/(Vec2){length, length};
-	gradient = {(float)round(delta.x), (float)round(delta.y)};
-
-	std::vector<Vec2> positions;
+	gradient = {(float)round(gradient.x), (float)round(gradient.y)};
 
 	uint8_t matrix[MAP_X*MAP_Y] = {};
 
 	for (int i = 0; i < MAP_X*MAP_Y; i++)
 		matrix[i] = 0;
 
-
-	/*
-	for (int i = 1; i < std::abs((end.x - start.x)); i++){
-		//x = (negativeGradient) ? -i : i;
-		x = i+start.x;
-		y = (i * gradient)-start.y;
-
-		matrix[Vec2Position((Vec2){(float)x, (float)y}, (Vec2){MAP_X, MAP_Y}) % 25] = 1;
-	}*/
-
 	matrix[Vec2Position(start, (Vec2){MAP_X, MAP_Y})] = 1;
 	matrix[Vec2Position(end, (Vec2){MAP_X, MAP_Y})] = 1;
 
-	for (int i = 1; i < round(length)-1; i++)
-		matrix[Vec2Position(gradient*(Vec2){(float)i, (float)i}, (Vec2){MAP_X, MAP_Y})] = 1;
+	int x;
+	int y;
 
-	int z[] = { 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
-	for (int i = 0; i < sizeof(z)/sizeof(z[0]); i++)
-		matrix[i] = z[i];
-
+	for (int i = 1; i < std::floor(length)-1; i++){
+		x = start.x + (gradient.x * i);
+		y = start.y - (gradient.y * i);
+		matrix[Vec2Position((Vec2){(float)x, (float)y}, (Vec2){MAP_X, MAP_Y})] = 1;
+	}
 
 	MicroBitImage result(MAP_X, MAP_Y, matrix);
 	return result;
@@ -124,11 +109,8 @@ MicroBitImage Vec2uBitImage(Vec2 start, Vec2 end){
 int main()
 {
 	uBit.init();
-	const uint8_t heart[] = { 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0}; // a cute heart
-	MicroBitImage i(5,5,heart);
 	while (true){
-		uBit.display.print(Vec2uBitImage((Vec2){3, 3}, (Vec2){5, 5}));
-		//uBit.display.print(i);
+		uBit.display.print(Vec2uBitImage((Vec2){3, 3}, (Vec2){3, 5}));
 		uBit.sleep(500);
 	}
 
