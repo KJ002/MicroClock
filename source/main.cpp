@@ -73,13 +73,14 @@ int Vec2Position(Vec2 position, Vec2 matrix){
 	int result = 0;
 
 	result += (round(position.y) - 1) * round(matrix.x);
-	result += round(position.x);
+	result += round(position.x) - 1;
 	return result;
 }
 
 MicroBitImage Vec2uBitImage(Vec2 start, Vec2 end){
-	float gradient = (end.y - start.y) / (end.x - start.x);
-	bool negativeGradient = (gradient < 0) ? true : false;
+	//float gradient = (end.y - start.y) / (end.x - start.x);
+	float gradient = 0.f;
+	bool negativeGradient = (gradient < 0.f) ? true : false;
 
 	uint8_t matrix[MAP_X*MAP_Y] = {};
 
@@ -90,13 +91,22 @@ MicroBitImage Vec2uBitImage(Vec2 start, Vec2 end){
 	int y;
 
 	for (int i = 0; i < std::abs((end.x - start.x)); i++){
-		x = (negativeGradient) ? -i : i;
+		//x = (negativeGradient) ? -i : i;
+		x = i;
 		y = i * gradient;
 
-		matrix[Vec2Position((Vec2){(float)x, (float)y}, (Vec2){MAP_X, MAP_Y}) % 25] = 1;
+		//matrix[Vec2Position((Vec2){(float)x, (float)y}, (Vec2){MAP_X, MAP_Y}) % 25] = 1;
+		matrix[Vec2Position((Vec2){(float)1, (float)1}, (Vec2){MAP_X, MAP_Y}) % 25] = 1;
 	}
 
-	return MicroBitImage(MAP_X, MAP_Y, matrix);
+	//int z[] = { 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+	//for (int i = 0; i < sizeof(z)/sizeof(z[0]); i++){
+	//	matrix[i] = z[i];
+	//}
+
+	MicroBitImage result(MAP_X, MAP_Y, matrix);
+	return result;
 }
 
 int main()
@@ -105,7 +115,7 @@ int main()
 	const uint8_t heart[] = { 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0}; // a cute heart
 	MicroBitImage i(5,5,heart);
 	while (true){
-		uBit.display.print(Vec2uBitImage((Vec2){3, 3}, (Vec2){1, 3}));
+		uBit.display.print(Vec2uBitImage((Vec2){3, 3}, (Vec2){5, 3}));
 		//uBit.display.print(i);
 		uBit.sleep(500);
 	}
