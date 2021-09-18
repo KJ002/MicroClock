@@ -78,7 +78,10 @@ int Vec2Position(Vec2 position, Vec2 matrix){
 	return result;
 }
 
-uint8_t * Vec2uBitImage(Vec2 start, Vec2 end){
+uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
+
+	if (th)
+		end = end.rotate(th, start);
 
 	Vec2 delta = {(end.x - start.x)+1, (start.y - end.y < 0) ? (start.y - end.y)-1 : (start.y - end.y)+1};
 	float length = std::sqrt(power2(delta.x)+power2(delta.y));
@@ -111,7 +114,7 @@ int main()
 
 	uint8_t x[25] = {};
 
-	const uint8_t * data = Vec2uBitImage((Vec2){3, 3}, (Vec2){4, 5});
+	const uint8_t * data = Vec2uBitImage((Vec2){3, 3}, (Vec2){3, 1}, 180);
 
 	for (int i = 0; i < 25; i++)
 		x[i] = *(data + i);
