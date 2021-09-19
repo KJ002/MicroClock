@@ -88,8 +88,30 @@ int Vec2Position(Vec2 position, Vec2 matrix){
 
 uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
 
+	// <--- There has to be a better way to do this --->
+
+	/*
+	  Calculate the distance between the x and y axis of two points.
+	*/
+
+	Vec2 delta = {0, 0};
+
+	if (start.x > end.x)
+		delta.x = end.x - start.x - 1;
+
+	if (start.x < end.y)
+		delta.x = end.x - start.x + 1;
+
+	if (start.y > end.y)
+		delta.y = end.y - start.y - 1;
+
+	if (start.y < end.y)
+		delta.y = end.y - start.y + 1;
+
+	// <--- --->
+
 	//Vec2 delta = {(end.x - start.x)+1, (end.y - start.y < 0) ? (end.y - start.y)+1 : (end.y - start.y)-1};
-	Vec2 delta = {0, -3};
+	//Vec2 delta = {0, -3};
 	float length = std::sqrt(power2(delta.x)+power2(delta.y));
 	Vec2 gradient = delta/(Vec2){length, length};
 	gradient = {(float)round(gradient.x), (float)round(gradient.y)};
