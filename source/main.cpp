@@ -1,9 +1,11 @@
 #include "MicroBit.h"
 #include <cmath>
-#include <vector>
 
 #define MAP_X 5
 #define MAP_Y 5
+#define MAP0_X 4
+#define MAP0_Y 4
+
 #define power2(x) (x*x)
 
 int _round(float x){
@@ -71,19 +73,22 @@ struct Vec2{
 MicroBit uBit;
 
 int Vec2Position(Vec2 position, Vec2 matrix){
-	int result = 0;
 
-	result += (round(position.y) - 1) * round(matrix.x);
-	result += round(position.x) - 1;
+	int result;
+
+	position = {(float)round(position.x+1), (float)round(position.y+1)};
+
+	int deltaY = MAP_Y - position.y;
+	deltaY *= MAP_Y;
+
+	result = deltaY + position.x - 1;
+
 	return result;
 }
 
 uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
 
-	if (th)
-		end = end.rotate(th, start);
-
-	Vec2 delta = {(end.x - start.x)+1, (start.y - end.y < 0) ? (start.y - end.y)-1 : (start.y - end.y)+1};
+	Vec2 delta = {(end.x - start.x)+1, (end.y - start.y < 0) ? (end.y - start.y)-1 : (end.y - start.y)+1};
 	float length = std::sqrt(power2(delta.x)+power2(delta.y));
 	Vec2 gradient = delta/(Vec2){length, length};
 	gradient = {(float)round(gradient.x), (float)round(gradient.y)};
@@ -108,13 +113,26 @@ uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
 	return matrix;
 }
 
+uint8_t * test(Vec2 pos){
+	static uint8_t matrix[MAP_X*MAP_Y] = {};
+
+	for (int i = 0; i < MAP_X*MAP_Y; i++)
+		matrix[i] = 0;
+
+	matrix[Vec2Position(pos, (Vec2){MAP_X, MAP_Y})] = 1;
+
+	return matrix;
+}
+
 int main()
 {
 	uBit.init();
 
 	uint8_t x[25] = {};
 
-	const uint8_t * data = Vec2uBitImage((Vec2){3, 3}, (Vec2){3, 1}, 180);
+	const uint8_t * data = Vec2uBitImage((Vec2){2, 2}, (Vec2){2, 0});
+
+	//const uint8_t * data = test((Vec2){2, 2});
 
 	for (int i = 0; i < 25; i++)
 		x[i] = *(data + i);
