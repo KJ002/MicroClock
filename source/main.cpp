@@ -8,7 +8,7 @@
 
 #define power2(x) (x*x)
 
-int _round(float x){
+float _round(float x){
 	return floor(x+0.5);
 }
 
@@ -72,7 +72,7 @@ struct Vec2{
 
 MicroBit uBit;
 
-int Vec2Position(Vec2 position, Vec2 matrix){
+int Vec2Position(Vec2 position){
 
 	int result;
 
@@ -86,40 +86,22 @@ int Vec2Position(Vec2 position, Vec2 matrix){
 	return result;
 }
 
-uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
-	Vec2 delta = {0, 0};
-
-    if (start.x > end.x)
-        delta.x = end.x - start.x - 1;
-
-    if (start.x < end.y)
-        delta.x = end.x - start.x + 1;
-
-	if (start.y > end.y)
-		delta.y = end.y - start.y - 1;
-
-	if (start.y < end.y)
-		delta.y = end.y - start.y + 1;
-
-	float length = std::sqrt(power2(delta.x)+power2(delta.y));
-	Vec2 gradient = delta/(Vec2){length, length};
-	gradient = {(float)round(gradient.x), (float)round(gradient.y)};
-
+uint8_t * Vec2uBitImage(Vec2 start, Vec2 end){
 	static uint8_t matrix[MAP_X*MAP_Y] = {};
 
 	for (int i = 0; i < MAP_X*MAP_Y; i++)
 		matrix[i] = 0;
 
-	int x;
-	int y;
+	Vec2 delta = end - start;
+	float gradient = delta.y / delta.x;
+	float y = start.y - (gradient * start.x);
 
-	for (int i = 0; i < std::floor(length)-2; i++){
-		x = start.x + (gradient.x * i);
-		y = start.y + (gradient.y * i);
-		matrix[Vec2Position((Vec2){(float)x, (float)y}, (Vec2){MAP_X, MAP_Y})] = 1;
+	for (float x = start.x; x <= end.x; x+=0.25){
+		matrix[Vec2Position((Vec2){x, std::floor((gradient * x) + y)})] = 1;
 	}
 
 	return matrix;
+
 }
 
 int main()
@@ -128,7 +110,7 @@ int main()
 
 	uint8_t x[25] = {};
 
-	const uint8_t * data = Vec2uBitImage((Vec2){0, 0}, (Vec2){4, 4});
+	const uint8_t * data = Vec2uBitImage((Vec2){2, 4}, (Vec2){3, 0});
 
 	for (int i = 0; i < 25; i++)
 		x[i] = *(data + i);
