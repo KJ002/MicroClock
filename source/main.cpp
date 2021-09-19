@@ -53,8 +53,8 @@ struct Vec2{
 	Vec2 rotate(const double th) const{
 		Vec2 result;
 
-		result.x = (cos(th) * this->x) + (-sin(th) * this->y);
-		result.y = (sin(th) * this->x) + (sin(th) * this->y);
+		result.x = cos(th) * this->x - sin(th) * this->y;
+		result.y = sin(th) * this->x + sin(th) * this->y;
 
 		return result;
 	}
@@ -87,22 +87,13 @@ int Vec2Position(Vec2 position, Vec2 matrix){
 }
 
 uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
-
-	end = end.rotate(th, start);
-
-	// <--- There has to be a better way to do this --->
-
-	/*
-	  Calculate the distance between the x and y axis of two points.
-	*/
-
 	Vec2 delta = {0, 0};
 
-	if (start.x > end.x)
-		delta.x = end.x - start.x - 1;
+    if (start.x > end.x)
+        delta.x = end.x - start.x - 1;
 
-	if (start.x < end.y)
-		delta.x = end.x - start.x + 1;
+    if (start.x < end.y)
+        delta.x = end.x - start.x + 1;
 
 	if (start.y > end.y)
 		delta.y = end.y - start.y - 1;
@@ -110,10 +101,6 @@ uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
 	if (start.y < end.y)
 		delta.y = end.y - start.y + 1;
 
-	// <--- --->
-
-	//Vec2 delta = {(end.x - start.x)+1, (end.y - start.y < 0) ? (end.y - start.y)+1 : (end.y - start.y)-1};
-	//Vec2 delta = {0, -3};
 	float length = std::sqrt(power2(delta.x)+power2(delta.y));
 	Vec2 gradient = delta/(Vec2){length, length};
 	gradient = {(float)round(gradient.x), (float)round(gradient.y)};
@@ -123,13 +110,10 @@ uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
 	for (int i = 0; i < MAP_X*MAP_Y; i++)
 		matrix[i] = 0;
 
-	matrix[Vec2Position(start, (Vec2){MAP_X, MAP_Y})] = 1;
-	matrix[Vec2Position(end, (Vec2){MAP_X, MAP_Y})] = 1;
-
 	int x;
 	int y;
 
-	for (int i = 1; i < std::floor(length)-1; i++){
+	for (int i = 0; i < std::floor(length)-2; i++){
 		x = start.x + (gradient.x * i);
 		y = start.y + (gradient.y * i);
 		matrix[Vec2Position((Vec2){(float)x, (float)y}, (Vec2){MAP_X, MAP_Y})] = 1;
@@ -144,7 +128,7 @@ int main()
 
 	uint8_t x[25] = {};
 
-	const uint8_t * data = Vec2uBitImage((Vec2){2, 2}, (Vec2){2, 0}, 1.570796);
+	const uint8_t * data = Vec2uBitImage((Vec2){0, 0}, (Vec2){4, 4});
 
 	for (int i = 0; i < 25; i++)
 		x[i] = *(data + i);
