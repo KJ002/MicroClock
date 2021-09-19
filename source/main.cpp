@@ -53,8 +53,8 @@ struct Vec2{
 	Vec2 rotate(const double th) const{
 		Vec2 result;
 
-		result.x = cos(th) * this->x - sin(th) * this->y;
-		result.y = sin(th) * this->x + sin(th) * this->y;
+		result.x = (cos(th) * this->x) + (-sin(th) * this->y);
+		result.y = (sin(th) * this->x) + (sin(th) * this->y);
 
 		return result;
 	}
@@ -87,6 +87,8 @@ int Vec2Position(Vec2 position, Vec2 matrix){
 }
 
 uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
+
+	end = end.rotate(th, start);
 
 	// <--- There has to be a better way to do this --->
 
@@ -136,26 +138,13 @@ uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
 	return matrix;
 }
 
-uint8_t * test(Vec2 pos){
-	static uint8_t matrix[MAP_X*MAP_Y] = {};
-
-	for (int i = 0; i < MAP_X*MAP_Y; i++)
-		matrix[i] = 0;
-
-	matrix[Vec2Position(pos, (Vec2){MAP_X, MAP_Y})] = 1;
-
-	return matrix;
-}
-
 int main()
 {
 	uBit.init();
 
 	uint8_t x[25] = {};
 
-	const uint8_t * data = Vec2uBitImage((Vec2){2, 2}, (Vec2){2, 0});
-
-	//const uint8_t * data = test((Vec2){2, 2});
+	const uint8_t * data = Vec2uBitImage((Vec2){2, 2}, (Vec2){2, 0}, 1.570796);
 
 	for (int i = 0; i < 25; i++)
 		x[i] = *(data + i);
