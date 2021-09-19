@@ -88,7 +88,8 @@ int Vec2Position(Vec2 position, Vec2 matrix){
 
 uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
 
-	Vec2 delta = {(end.x - start.x)+1, (end.y - start.y < 0) ? (end.y - start.y)-1 : (end.y - start.y)+1};
+	//Vec2 delta = {(end.x - start.x)+1, (end.y - start.y < 0) ? (end.y - start.y)+1 : (end.y - start.y)-1};
+	Vec2 delta = {0, -3};
 	float length = std::sqrt(power2(delta.x)+power2(delta.y));
 	Vec2 gradient = delta/(Vec2){length, length};
 	gradient = {(float)round(gradient.x), (float)round(gradient.y)};
@@ -106,7 +107,7 @@ uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
 
 	for (int i = 1; i < std::floor(length)-1; i++){
 		x = start.x + (gradient.x * i);
-		y = start.y - (gradient.y * i);
+		y = start.y + (gradient.y * i);
 		matrix[Vec2Position((Vec2){(float)x, (float)y}, (Vec2){MAP_X, MAP_Y})] = 1;
 	}
 
