@@ -53,8 +53,8 @@ struct Vec2{
 	Vec2 rotate(const double th) const{
 		Vec2 result;
 
-		result.x = cos(th) * this->x - sin(th) * this->y;
-		result.y = sin(th) * this->x + sin(th) * this->y;
+		result.x = std::cos(th) * this->x - std::sin(th) * this->y;
+		result.y = std::sin(th) * this->x + std::sin(th) * this->y;
 
 		return result;
 	}
@@ -86,11 +86,19 @@ int Vec2Position(Vec2 position){
 	return result;
 }
 
-uint8_t * Vec2uBitImage(Vec2 start, Vec2 end){
+uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
 	static uint8_t matrix[MAP_X*MAP_Y] = {};
 
 	for (int i = 0; i < MAP_X*MAP_Y; i++)
 		matrix[i] = 0;
+
+	if (start.x == end.x){
+		float direction = (start.y > end.y) ? -1 : 1;
+		int length = std::abs(end.y - start.y);
+		for (float i = 0; i <= length; i++)
+			matrix[Vec2Position((Vec2){start.x, start.y + (direction * i)})] = 1;
+		return matrix;
+	}
 
 	Vec2 delta = end - start;
 	float gradient = delta.y / delta.x;
@@ -110,7 +118,7 @@ int main()
 
 	uint8_t x[25] = {};
 
-	const uint8_t * data = Vec2uBitImage((Vec2){2, 4}, (Vec2){3, 0});
+	const uint8_t * data = Vec2uBitImage((Vec2){2, 2}, (Vec2){2, 4}, 1.570796);
 
 	for (int i = 0; i < 25; i++)
 		x[i] = *(data + i);
