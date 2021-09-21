@@ -120,35 +120,39 @@ uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
 	}
 
 	Vec2 delta = end - start;
-	float gradient = delta.y / delta.x;
-	float y = start.y - (gradient * start.x);
+	float step;
 
-	for (float x = start.x; x <= end.x; x+=0.25){
-		matrix[Vec2Position((Vec2){x, std::floor((gradient * x) + y)})] = 1;
+	if (std::abs(delta.x) >= std::abs(delta.y))
+		step = std::abs(delta.x);
+
+	else
+		step = std::abs(delta.y);
+
+	delta = delta / (Vec2){step, step};
+
+	Vec2 pos = start;
+
+	for (int i = 0; i<=step; i++){
+		matrix[Vec2Position(pos)] = 1;
+		pos.x += delta.x;
+		pos.y += delta.y;
 	}
 
 	return matrix;
 }
 
 
-
 int main()
 {
 	uBit.init();
 
-	float rotation = 0;
+	uint8_t * data = Vec2uBitImage((Vec2){2, 0}, (Vec2){1, 4});
 
-	uint8_t * data;
-
-	MicroBitImage k;
+	MicroBitImage k(5, 5, data);
 
 	while (true){
-		data = Vec2uBitImage((Vec2){2, 2}, (Vec2){2, 4}, rotation);
-		k = MicroBitImage(5, 5, data);
 		uBit.display.print(k);
 		uBit.sleep(250);
-		rotation++;
-		rotation = (int)rotation%360;
 	}
 
 	release_fiber();
