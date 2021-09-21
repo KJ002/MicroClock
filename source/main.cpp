@@ -17,10 +17,6 @@ float _round(float x){
 	return floor(x+0.5);
 }
 
-Vec2 _round(Vec2 x){
-	return floor(x+0.5);
-}
-
 struct Vec2{
 	float x;
 	float y;
@@ -65,8 +61,8 @@ struct Vec2{
 
 		Vec2 result;
 
-		result.x = std::cos(th) * this->x - std::sin(th) * this->y;
-		result.y = std::sin(th) * this->x + std::sin(th) * this->y;
+		result.x = std::cos(rad) * this->x - std::sin(rad) * this->y;
+		result.y = std::sin(rad) * this->x + std::cos(rad) * this->y;
 
 		return result;
 	}
@@ -79,6 +75,12 @@ struct Vec2{
 
 	float length() const{
 		return std::sqrt(power2(x) + power2(y));
+	}
+
+	Vec2 round() const{
+		Vec2 result = {_round(x), _round(y)};
+
+		return result;
 	}
 };
 
@@ -99,12 +101,14 @@ int Vec2Position(Vec2 position){
 }
 
 uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
+
+	start = start.round();
+	end = end.round().rotate(th, start);
+
 	static uint8_t matrix[MAP_X*MAP_Y] = {};
 
 	for (int i = 0; i < MAP_X*MAP_Y; i++)
 		matrix[i] = 0;
-
-	end = end.rotate(th, start);
 
 	if (start.x == end.x){
 		float direction = (start.y > end.y) ? -1 : 1;
@@ -132,7 +136,7 @@ int main()
 
 	uint8_t x[25] = {};
 
-	const uint8_t * data = Vec2uBitImage((Vec2){2, 2}, (Vec2){2, 4}, 1.570796);
+	const uint8_t * data = Vec2uBitImage((Vec2){2, 2}, (Vec2){2, 4}, 90);
 
 	for (int i = 0; i < 25; i++)
 		x[i] = *(data + i);
