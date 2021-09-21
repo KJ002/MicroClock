@@ -6,9 +6,18 @@
 #define MAP0_X 4
 #define MAP0_Y 4
 
+#define PI 2*acos(0.0)
 #define power2(x) (x*x)
 
+
+double radToDeg(double rad) { return rad / (PI / 180); }
+double degToRad(double deg) { return deg * (PI / 180); }
+
 float _round(float x){
+	return floor(x+0.5);
+}
+
+Vec2 _round(Vec2 x){
 	return floor(x+0.5);
 }
 
@@ -51,6 +60,9 @@ struct Vec2{
 	}
 
 	Vec2 rotate(const double th) const{
+
+		const double rad = degToRad(360-th);
+
 		Vec2 result;
 
 		result.x = std::cos(th) * this->x - std::sin(th) * this->y;
@@ -62,7 +74,7 @@ struct Vec2{
 	Vec2 rotate(const double th, const Vec2& origin) const{
 		Vec2 newPoint = *this - origin;
 
-		return newPoint.rotate(th);
+		return newPoint.rotate(th)+origin;
 	}
 
 	float length() const{
@@ -91,6 +103,8 @@ uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
 
 	for (int i = 0; i < MAP_X*MAP_Y; i++)
 		matrix[i] = 0;
+
+	end = end.rotate(th, start);
 
 	if (start.x == end.x){
 		float direction = (start.y > end.y) ? -1 : 1;
