@@ -141,6 +141,8 @@ uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
 		pos.y += delta.y;
 	}
 
+	matrix[Vec2Position(end)] = 1;
+
 	return matrix;
 }
 
@@ -149,13 +151,18 @@ int main()
 {
 	uBit.init();
 
-	uint8_t * data = Vec2uBitImage((Vec2){2, 0}, (Vec2){1, 4});
+	float rotation = 0;
 
-	MicroBitImage k(5, 5, data);
+	uint8_t * data;
+
+	MicroBitImage k;
 
 	while (true){
+		data = Vec2uBitImage((Vec2){2, 2}, (Vec2){2, 4}, rotation);
+		k = MicroBitImage(5, 5, data);
 		uBit.display.print(k);
-		uBit.sleep(250);
+		uBit.sleep(2.778);
+		rotation++;
 	}
 
 	release_fiber();
