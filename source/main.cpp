@@ -115,6 +115,7 @@ uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
 		int length = std::abs(end.y - start.y);
 		for (float i = 0; i <= length; i++)
 			matrix[Vec2Position((Vec2){start.x, start.y + (direction * i)})] = 1;
+
 		return matrix;
 	}
 
@@ -127,24 +128,18 @@ uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
 	}
 
 	return matrix;
-
 }
 
 int main()
 {
 	uBit.init();
 
-	uint8_t x[25] = {};
+	uint8_t * data = Vec2uBitImage((Vec2){2, 2}, (Vec2){2, 4}, 90);
 
-	const uint8_t * data = Vec2uBitImage((Vec2){2, 2}, (Vec2){2, 4}, 90);
-
-	for (int i = 0; i < 25; i++)
-		x[i] = *(data + i);
-
-	MicroBitImage k(5, 5, x);
+	MicroBitImage k(5, 5, data);
 	while (true){
 		uBit.display.print(k);
-		uBit.sleep(500);
+		uBit.sleep(250);
 	}
 
 	release_fiber();
