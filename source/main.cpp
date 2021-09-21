@@ -57,6 +57,9 @@ struct Vec2{
 
 	Vec2 rotate(const double th) const{
 
+		if (!th%360)
+			return *this;
+
 		const double rad = degToRad(360-th);
 
 		Vec2 result;
