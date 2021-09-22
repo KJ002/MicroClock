@@ -6,16 +6,6 @@
 #define MAP0_X 4
 #define MAP0_Y 4
 
-#define PI 2*acos(0.0)
-#define power2(x) (x*x)
-
-
-double radToDeg(double rad) { return rad / (PI / 180); }
-double degToRad(double deg) { return deg * (PI / 180); }
-
-float _round(float x){
-	return floor(x+0.5);
-}
 
 struct Vec2{
 	float x;
