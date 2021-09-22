@@ -7,6 +7,7 @@ struct Vec2{
     Vec2 operator+(const Vec2& other) const;
     Vec2 operator-(const Vec2& other) const;
     Vec2 operator*(const Vec2& other) const;
+    Vec2 operator/(const Vec2& other) const;
     bool operator>(const Vec2& other) const;
     bool operator<(const Vec2& other) const;
     double dotProduct(const Vec2& other) const;
