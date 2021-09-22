@@ -3,7 +3,6 @@
 #include <cmath>
 
 
-
 #define MAP_X 5
 #define MAP_Y 5
 #define MAP0_X 4
