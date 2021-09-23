@@ -15,16 +15,12 @@ MicroBit uBit;
 
 int Vec2Position(Vec2 position){
 
-	int result;
-
 	position = {(float)round(position.x+1), (float)round(position.y+1)};
 
 	int deltaY = MAP_Y - position.y;
 	deltaY *= MAP_Y;
 
-	result = deltaY + position.x - 1;
-
-	return result;
+	return deltaY + position.x - 1;
 }
 
 uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
