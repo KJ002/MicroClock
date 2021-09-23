@@ -7,7 +7,8 @@
 #define MAP0_X 4
 #define MAP0_Y 4
 
-#define uMin 60000000/360
+#define uMin 166.68
+#define uHour 1000
 
 
 MicroBit uBit;
