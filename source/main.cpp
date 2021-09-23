@@ -2,11 +2,12 @@
 #include "vec2.hpp"
 #include <cmath>
 
-
 #define MAP_X 5
 #define MAP_Y 5
 #define MAP0_X 4
 #define MAP0_Y 4
+
+#define uMin 60000000/360
 
 
 MicroBit uBit;
@@ -83,7 +84,7 @@ int main()
 		data = Vec2uBitImage((Vec2){2, 2}, (Vec2){2, 4}, rotation);
 		k = MicroBitImage(5, 5, data);
 		uBit.display.print(k);
-		uBit.sleep(2.778);
+		uBit.sleep(uMin);
 		rotation++;
 	}
 
