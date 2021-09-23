@@ -33,15 +33,6 @@ uint8_t * Vec2uBitImage(Vec2 start, Vec2 end, float th = 0){
 	for (int i = 0; i < MAP_X*MAP_Y; i++)
 		matrix[i] = 0;
 
-	if (start.x == end.x){
-		float direction = (start.y > end.y) ? -1 : 1;
-		int length = std::abs(end.y - start.y);
-		for (float i = 0; i <= length; i++)
-			matrix[Vec2Position((Vec2){start.x, start.y + (direction * i)})] = 1;
-
-		return matrix;
-	}
-
 	Vec2 delta = end - start;
 	float step;
 
